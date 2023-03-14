@@ -31,7 +31,7 @@ export default function Home() {
           title:title,
           url:url,
           user_id:userId
-        });
+        }).select();
         if(error) throw error;
         console.log("data",data)
       }

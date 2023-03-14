@@ -65,7 +65,7 @@ export default function Login(){
         className="rounded-md bg-indigo-600 py-1.5 px-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-4"
         onClick={loginWithEmail}
       >
-        Sign up
+        Log in
       </button>
     </div>
       )
