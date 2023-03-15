@@ -1,9 +1,8 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-import supabase from "@/utils/supabaseClient";
+
 import { useEffect,useState } from "react";
+import {ImageListType} from "react-images-uploading";
+import supabase from "@/utils/supabaseClient";
+
 type Link={
   title: string;
   url: string;
@@ -15,6 +14,7 @@ export default function Home() {
   const [title,setTitle]=useState<string |undefined>();
   const [url,setUrl]=useState<string |undefined>();
   const [links, setLinks] =useState<Link[]>();
+  const [images,setImages]=useState<ImageListType>([]);
   useEffect( ()=>{
     const getUser= async () =>{
       const user =await supabase.auth.getUser();
