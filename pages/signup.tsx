@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import supabase from "@/utils/supabaseClient";
 import { useState } from "react";
 
@@ -5,6 +6,7 @@ import { useState } from "react";
 export default function Signup(){
     const [email,setEmail]=useState<string |undefined>();
     const [password,setPassword]=useState<string |undefined>();
+    const router = useRouter();
 
     async function signUpWithEmail() {
       try {
@@ -16,6 +18,7 @@ export default function Signup(){
           if (resp.error) throw resp.error;
           const userId =resp.data.user?.id;
           console.log("UserID: ",userId);
+          router.push("/")
         }
         
       } catch  {

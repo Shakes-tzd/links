@@ -4,18 +4,21 @@ import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import supabase from "@/utils/supabaseClient";
 import { useEffect,useState } from "react";
-
-const inter = Inter({ subsets: ['latin'] })
+type Link={
+  title: string;
+  url: string;
+}
 
 export default function Home() {
   const [isAuthenticated,setIsAuthenthicated] = useState<boolean>(false);
   const [userId, setUserId]=useState<string | undefined>();
   const [title,setTitle]=useState<string |undefined>();
   const [url,setUrl]=useState<string |undefined>();
+  const [links, setLinks] =useState<Link[]>();
   useEffect( ()=>{
     const getUser= async () =>{
       const user =await supabase.auth.getUser();
-      console.log("user",user)
+      //console.log("user",user)
       if(user) {
         const userId= user.data.user?.id;
         setIsAuthenthicated(true);
@@ -24,6 +27,23 @@ export default function Home() {
     };
     getUser();
   }, []);
+  useEffect(()=>{
+    const getLinks = async ()=>{
+      try {const {data,error} =await supabase
+      .from('links')
+      .select("title,url")
+      .eq("user_id",userId);
+      if(error) throw error;
+      setLinks(data)
+      //console.log("data ",data)
+        
+      } catch (error) {
+        console.log(error)
+        }};
+        if (userId){
+          getLinks()
+        }
+  },[userId]);//why passed in [userID]: anytime userId changes call run the entire useEffect
   const addNewLink = async ()=>{
     try{
       if(title && url && userId){
@@ -33,9 +53,11 @@ export default function Home() {
           user_id:userId
         }).select();
         if(error) throw error;
-        console.log("data",data)
-      }
-    } catch(error){
+        //console.log("data",data)
+        if(links){
+        setLinks([...data,...links]);}// [...data,...links] deconstructs the links array and the ...data combines all the elements within the data array 
+    
+    }} catch(error){
       console.log("error: ",error)
     }
    
@@ -43,6 +65,17 @@ export default function Home() {
   }
   return (
     <div className="flex flex-col w-full justify-center items-center">
+      {links?.map((link:Link,index:number)=>(
+        <div className="shadow-xl w-96 bg-indigo-500 mt-4 p-4 rounded-lg text-center text-white"
+        key={index} 
+        onClick={
+          (e)=>{
+            e.preventDefault();
+            window.location.href=link.url;
+          }
+        }
+        >{link.title}</div>
+      ))}
       {isAuthenticated &&(
         <>
         <div 
